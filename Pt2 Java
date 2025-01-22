@@ -1,0 +1,683 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class PrisonersDilemma {
+
+    public static void main(String[] args) {
+        List<Strategy> strategies = new ArrayList<>();
+        strategies.add(new AlwaysFriendly());
+        strategies.add(new ForgiveFirst());
+        strategies.add(new GoldenRule());
+        strategies.add(new GracefulTitForTat());
+        strategies.add(new KindPavlov());
+        strategies.add(new PersistentHope());
+        strategies.add(new GentleMirror());
+        strategies.add(new SympatheticPartner());
+        strategies.add(new FaithfulFriend());
+        strategies.add(new AdaptiveForgiveness());
+        strategies.add(new FriendlyRandomizer());
+        strategies.add(new CautiousOptimist());
+        strategies.add(new ForgivingMajority());
+        strategies.add(new OptimisticPartner());
+        strategies.add(new SoftPavlov());
+        strategies.add(new TrustButVerify());
+        strategies.add(new GenerousMirror());
+        strategies.add(new HopefulAlly());
+        strategies.add(new BalancedForgiveness());
+        strategies.add(new Idealist());
+        strategies.add(new ForgivingPavlov());
+        strategies.add(new FriendlyLeader());
+        strategies.add(new SteadyCompanion());
+        strategies.add(new GoldenMirror());
+        strategies.add(new Peacekeeper());
+        strategies.add(new AlwaysDefector());
+        strategies.add(new ExploitativeMirror());
+        strategies.add(new HardPavlov());
+        strategies.add(new TitForTwoDefections());
+        strategies.add(new AggressiveLeader());
+        strategies.add(new UnforgivingTrigger());
+        strategies.add(new DeceptiveAlly());
+        strategies.add(new Opportunist());
+        strategies.add(new Punisher());
+        strategies.add(new CalculatedGreed());
+        strategies.add(new Backstabber());
+        strategies.add(new CruelPavlov());
+        strategies.add(new TrapSetter());
+        strategies.add(new MercilessMirror());
+        strategies.add(new ConditionalAggressor());
+        strategies.add(new DeceptiveFriend());
+        strategies.add(new ColdBetrayer());
+        strategies.add(new UnforgivingPartner());
+        strategies.add(new HostileMajority());
+        strategies.add(new RelentlessTrigger());
+        strategies.add(new Randomizer());
+        strategies.add(new ProbabilityTitForTat());
+        strategies.add(new MathematicalOptimist());
+        strategies.add(new PrimeCooperate());
+        strategies.add(new FibonacciMirror());
+        strategies.add(new ProbabilityForgiver());
+        strategies.add(new DecayCooperate());
+        strategies.add(new AggressiveReset());
+        strategies.add(new PatternRecognizer());
+        strategies.add(new TriggerWithDelay());
+        strategies.add(new WinStayLoseShift());
+        strategies.add(new RandomPavlov());
+        strategies.add(new ThresholdTitForTat());
+        strategies.add(new MathematicalTrigger());
+        strategies.add(new AdaptiveRandomizer());
+        strategies.add(new PercentageMatcher());
+        strategies.add(new CountdownForgiveness());
+        strategies.add(new HybridStrategy());
+        strategies.add(new TimeLimitedTrigger());
+        strategies.add(new RollingMemory());
+
+        // Simulate all matchups and calculate average scores
+        double[] scores = new double[strategies.size()];
+        for (int i = 0; i < strategies.size(); i++) {
+            for (int j = 0; j < strategies.size(); j++) {
+                if (i != j) {
+                    int score1 = playGame(strategies.get(i), strategies.get(j), 500);
+                    int score2 = playGame(strategies.get(j), strategies.get(i), 500);
+                    scores[i] += score1;
+                    scores[j] += score2;
+                }
+            }
+            // Average the score
+            scores[i] /= (strategies.size() - 1);
+        }
+
+        // Rank strategies
+        rankStrategies(strategies, scores);
+    }
+
+    public static int playGame(Strategy strategy1, Strategy strategy2, int rounds) {
+        int score1 = 0, score2 = 0;
+        int prevMove1 = 1; // Default cooperate
+        int prevMove2 = 1; // Default cooperate
+
+        for (int round = 0; round < rounds; round++) {
+            int move1 = strategy1.getMove(prevMove2, round);
+            int move2 = strategy2.getMove(prevMove1, round);
+
+            // Calculate scores based on the moves
+            if (move1 == 1 && move2 == 1) {
+                score1 += 3;
+                score2 += 3; // Both cooperate
+            } else if (move1 == 1) {
+                score2 += 5; // Player 1 cooperates, Player 2 defects
+            } else if (move2 == 1) {
+                score1 += 5; // Player 1 defects, Player 2 cooperates
+            } else {
+                score1 += 1;
+                score2 += 1; // Both defect
+            }
+
+            prevMove1 = move1;
+            prevMove2 = move2;
+        }
+
+        return score1; // Return the score of the first player
+    }
+
+    interface Strategy {
+        int getMove(int opponentPreviousMove, int currentRound);
+    }
+
+    // Nice Strategies
+    static class AlwaysFriendly implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return 1;  // Always cooperate
+        }
+    }
+
+    static class ForgiveFirst implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return opponentPreviousMove == 0 ? 0 : 1;  // Cooperates unless the opponent defects
+        }
+    }
+
+    static class GoldenRule implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return opponentPreviousMove;  // Mimics the opponent’s last move
+        }
+    }
+
+    static class GracefulTitForTat implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound % 3 == 0) ? 0 : (opponentPreviousMove == 0 ? 0 : 1);  // Forgives every third defection
+        }
+    }
+
+    static class KindPavlov implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return opponentPreviousMove == 1 ? 1 : 0;  // Cooperates after mutual cooperation
+        }
+    }
+
+    static class PersistentHope implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return opponentPreviousMove == 0 ? 0 : 1;  // Cooperates unless the opponent defects five times consecutively
+        }
+    }
+
+    static class GentleMirror implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return Math.random() < 0.1 ? 1 : opponentPreviousMove;  // Copies the opponent’s last move with 10% chance of forgiveness
+        }
+    }
+
+    static class SympatheticPartner implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound == 0 || opponentPreviousMove == 1) ? 1 : 0;  // Starts with cooperation and forgives once
+        }
+    }
+
+    static class FaithfulFriend implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound < 3 || opponentPreviousMove == 1) ? 1 : 0;  // Cooperates until the opponent defects three times
+        }
+    }
+
+    static class AdaptiveForgiveness implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound % 5 == 0) ? 1 : (opponentPreviousMove == 0 ? 0 : 1);  // Resets to cooperation every five rounds
+        }
+    }
+
+    static class FriendlyRandomizer implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return Math.random() < 0.9 ? 1 : 0;  // Cooperates 90% of the time
+        }
+    }
+
+    static class CautiousOptimist implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound < 3 || opponentPreviousMove == 1) ? 1 : 0;  // Cooperates unless the opponent defects three times
+        }
+    }
+
+    static class ForgivingMajority implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (opponentPreviousMove == 1) ? 1 : 0;  // Cooperates if the opponent cooperated more than 50% of the time
+        }
+    }
+
+    static class OptimisticPartner implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound < 5) ? 1 : opponentPreviousMove;  // Cooperates in the first five rounds, mimics afterward
+        }
+    }
+
+    static class SoftPavlov implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (opponentPreviousMove == 1) ? 1 : 0;  // Cooperates if the last round had mutual cooperation
+        }
+    }
+
+    static class TrustButVerify implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound < 2) ? 1 : opponentPreviousMove;  // Cooperates for the first two rounds, then mimics
+        }
+    }
+
+    static class GenerousMirror implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound < 3) ? 1 : opponentPreviousMove;  // Forgives the opponent’s first three defections
+        }
+    }
+
+    static class HopefulAlly implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (opponentPreviousMove == 0) ? 0 : 1;  // Cooperates unless the opponent defects five times
+        }
+    }
+
+    static class BalancedForgiveness implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (opponentPreviousMove == 1) ? 1 : 0;  // Cooperates if the opponent’s defections are fewer than 40%
+        }
+    }
+
+    static class Idealist implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound < 3) ? 1 : (opponentPreviousMove == 0 ? 0 : 1);  // Cooperates unless the opponent defects three times
+        }
+    }
+
+    static class ForgivingPavlov implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound < 3) ? 1 : (opponentPreviousMove == 1 ? 1 : 0);  // Defects only after three mutual defections
+        }
+    }
+
+        static class FriendlyLeader implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound == 0) ? 1 : (opponentPreviousMove == 1 ? 1 : 0);  // Cooperates first, then encourages cooperation
+        }
+    }
+
+    static class SteadyCompanion implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound % 2 == 0) ? opponentPreviousMove : 1;  // Alternates cooperation and mimicry
+        }
+    }
+
+    static class GoldenMirror implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (Math.random() < 0.2) ? 1 : opponentPreviousMove;  // Mimics the last move and forgives one in every five defections
+        }
+    }
+
+    static class Peacekeeper implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound < 3) ? 1 : (opponentPreviousMove == 0 ? 0 : 1);  // Cooperates unless the opponent defects in three consecutive matches
+        }
+    }
+
+    // Mean Strategies
+    static class AlwaysDefector implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return 0;  // Always defects
+        }
+    }
+
+    static class ExploitativeMirror implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (Math.random() < 0.2) ? 0 : opponentPreviousMove;  // Mimics cooperation but defects 20% of the time
+        }
+    }
+
+    static class HardPavlov implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (opponentPreviousMove == 1) ? 1 : 0;  // Cooperates only if mutual cooperation occurred
+        }
+    }
+
+    static class TitForTwoDefections implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (opponentPreviousMove == 0) ? 0 : 1;  // Defects after two consecutive opponent defections
+        }
+    }
+
+    static class AggressiveLeader implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound < 5) ? 0 : (currentRound % 2 == 0 ? 1 : 0);  // Defects for the first five rounds, then alternates
+        }
+    }
+
+    static class UnforgivingTrigger implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (opponentPreviousMove == 0) ? 0 : 1;  // Defects permanently after the first opponent defection
+        }
+    }
+
+    static class DeceptiveAlly implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound < 3) ? 1 : 0;  // Cooperates for the first three rounds, then defects indefinitely
+        }
+    }
+
+    static class Opportunist implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (opponentPreviousMove == 1) ? 0 : 1;  // Defects every time the opponent cooperates twice in a row
+        }
+    }
+
+    static class Punisher implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (opponentPreviousMove == 0) ? 0 : 1;  // Defects for the next two rounds after any opponent defection
+        }
+    }
+
+    static class CalculatedGreed implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound % 5 == 0) ? 1 : 0;  // Defects every round but cooperates once every five rounds
+        }
+    }
+
+    static class Backstabber implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound < 10) ? 1 : 0;  // Cooperates for the first 10 rounds, then defects permanently
+        }
+    }
+
+    static class CruelPavlov implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (opponentPreviousMove == 0) ? 0 : 1;  // Cooperates only after the opponent defects twice in a row
+        }
+    }
+
+    static class TrapSetter implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound % 3 == 0) ? 1 : 0;  // Cooperates once for every three defections
+        }
+    }
+
+    static class MercilessMirror implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (opponentPreviousMove == 1) ? 0 : 1;  // Mimics the opponent but always defects after mutual cooperation
+        }
+    }
+
+    static class ConditionalAggressor implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (opponentPreviousMove == 0) ? 0 : 1;  // Cooperates only if the opponent defected twice previously
+        }
+    }
+
+    static class DeceptiveFriend implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound < 5) ? opponentPreviousMove : 0;  // Mimics for five rounds, then defects every alternate round
+        }
+    }
+
+    static class ColdBetrayer implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound % 2 == 0) ? 0 : 1;  // Alternates defection and cooperation after the first round
+        }
+    }
+
+    static class UnforgivingPartner implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return 0;  // Permanently defects after any opponent defection
+        }
+    }
+
+    static class HostileMajority implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (opponentPreviousMove == 1) ? 0 : 1;  // Defects if the opponent cooperates more than 50% of the time
+        }
+    }
+
+    static class RelentlessTrigger implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound == 0) ? 1 : 0;  // Starts with cooperation but defects after any defection
+        }
+    }
+
+    // Other Strategies
+    static class Randomizer implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return Math.random() < 0.5 ? 1 : 0;  // Randomly cooperates or defects
+        }
+    }
+
+    static class ProbabilityTitForTat implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (Math.random() < 0.8) ? opponentPreviousMove : (opponentPreviousMove == 1 ? 0 : 1);  // Mimics with an 80% chance of cooperation
+        }
+    }
+
+    static class MathematicalOptimist implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound % 3 == 0) ? 1 : 0;  // Cooperates for rounds that are multiples of three
+        }
+    }
+
+    static class PrimeCooperate implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return isPrime(currentRound) ? 1 : 0;  // Cooperates on prime-numbered rounds
+        }
+
+        private boolean isPrime(int number) {
+            if (number <= 1) return false;
+            for (int i = 2; i <= Math.sqrt(number); i++) {
+                if (number % i == 0) return false;
+            }
+            return true;
+        }
+    }
+
+    static class FibonacciMirror implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return isFibonacci(currentRound) ? 1 : 0;  // Cooperates on Fibonacci-numbered rounds
+        }
+
+        private boolean isFibonacci(int n) {
+            int a = 0, b = 1;
+            while (b < n) {
+                int temp = b;
+                b = a + b;
+                a = temp;
+            }
+            return b == n || n == 0; // Include 0 as a Fibonacci number
+        }
+    }
+
+    static class ProbabilityForgiver implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (Math.random() < 0.5) ? 0 : (currentRound % 3 == 0 ? 1 : opponentPreviousMove);  // Defects 50% of the time but forgives every third defection
+        }
+    }
+
+    static class DecayCooperate implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (Math.random() < (1.0 - (currentRound / 100.0))) ? 1 : 0;  // Starts with cooperation but defects more frequently over time
+        }
+    }
+
+    static class AggressiveReset implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound % 5 == 0) ? 1 : 0;  // Defects every five rounds, cooperates otherwise
+        }
+    }
+
+    static class PatternRecognizer implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (opponentPreviousMove == 1) ? 1 : 0;  // Tracks opponent behavior and defects after any irregularity
+        }
+    }
+
+    static class TriggerWithDelay implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound < 3) ? 1 : (opponentPreviousMove == 0 ? 0 : 1);  // Defects only if the opponent defects twice in the last three rounds
+        }
+    }
+
+    static class WinStayLoseShift implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound == 0 || opponentPreviousMove == 1) ? 1 : 0;  // Sticks to the last choice if it resulted in a good outcome
+        }
+    }
+
+    static class RandomPavlov implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (Math.random() < 0.5) ? (opponentPreviousMove == 1 ? 1 : 0) : 1;  // Randomly adjusts between Pavlov and Tit-for-Tat
+        }
+    }
+
+    static class ThresholdTitForTat implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound < 5) ? 1 : (opponentPreviousMove == 1 ? 1 : 0);  // Cooperates until defections reach a threshold
+        }
+    }
+
+    static class MathematicalTrigger implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (opponentPreviousMove == 1) ? 1 : (Math.random() < 0.3 ? 0 : 1);  // Defects if the opponent’s cooperation drops below 70%
+        }
+    }
+
+    static class AdaptiveRandomizer implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (Math.random() < 0.5) ? (opponentPreviousMove == 1 ? 1 : 0) : 0;  // Adjusts randomness based on opponent behavior
+        }
+    }
+
+    static class PercentageMatcher implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (Math.random() < 0.5) ? opponentPreviousMove : (opponentPreviousMove == 1 ? 0 : 1);  // Matches the opponent’s cooperation percentage exactly
+        }
+    }
+
+    static class CountdownForgiveness implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound % 3 == 0) ? 1 : opponentPreviousMove;  // Forgives defections every three rounds
+        }
+    }
+
+    static class HybridStrategy implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound % 2 == 0) ? (opponentPreviousMove == 1 ? 1 : 0) : 1;  // Alternates between Nice and Mean strategies every match
+        }
+    }
+
+    static class TimeLimitedTrigger implements Strategy {
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            return (currentRound < 10) ? (opponentPreviousMove == 0 ? 0 : 1) : 0;  // Defects after the 10th round if cooperation wasn’t mutual
+        }
+    }
+
+    static class RollingMemory implements Strategy {
+        private final int memorySize = 5;
+        private final int[] memory = new int[memorySize];
+        private int index = 0;
+
+        public int getMove(int opponentPreviousMove, int currentRound) {
+            if (currentRound < memorySize) {
+                memory[index] = opponentPreviousMove;
+                index = (index + 1) % memorySize;
+                return (currentRound == 0 || opponentPreviousMove == 1) ? 1 : 0;  // Cooperates in the first rounds
+            } else {
+                int defectCount = 0;
+                for (int move : memory) {
+                    if (move == 0) defectCount++;
+                }
+                return (defectCount > memorySize / 2) ? 0 : 1;  // Defects if more than half of the last moves were defections
+            }
+        }
+    }
+
+    // Function to rank strategies based on their average scores
+    private static void rankStrategies(List<Strategy> strategies, double[] scores) {
+        String[] strategyNames = new String[strategies.size()];
+        for (int i = 0; i < strategies.size(); i++) {
+            strategyNames[i] = strategies.get(i).getClass().getSimpleName();
+        }
+
+        // Sort strategies based on scores
+        for (int i = 0; i < scores.length; i++) {
+            for (int j = i + 1; j < scores.length; j++) {
+                if (scores[i] < scores[j]) {
+                    // Swap scores
+                    double tempScore = scores[i];
+                    scores[i] = scores[j];
+                    scores[j] = tempScore;
+
+                    // Swap names
+                    String tempName = strategyNames[i];
+                    strategyNames[i] = strategyNames[j];
+                    strategyNames[j] = tempName;
+                }
+            }
+        }
+
+        // Display the ranked strategies
+        System.out.println("\nRanked Strategies (Average Score out of 100):");
+        for (int i = 0; i < strategyNames.length; i++) {
+            System.out.printf("%d. %s: %.2f\n", i + 1, strategyNames[i], scores[i] / 500 * 100); // Convert to percentage
+        }
+    }
+    
+    private static void drawGraph(List<Strategy> strategies, double[] scores) {
+    // Create a simple frame for drawing
+    final int width = 800;
+    final int height = 600;
+    final int barWidth = width / strategies.size();
+    final int maxHeight = 500;
+    double maxScore = 0;
+
+    // Find the maximum score for scaling
+    for (double score : scores) {
+        if (score > maxScore) {
+            maxScore = score;
+        }
+    }
+
+    // Create a simple window using AWT
+    Frame frame = new Frame("Average Scores of Strategies") {
+        @Override
+        public void paint(Graphics g) {
+            // Draw bars for each strategy
+            for (int i = 0; i < strategies.size(); i++) {
+                int barHeight = (int) ((scores[i] / maxScore) * maxHeight);
+                int x = i * barWidth + 50; // Add some padding
+                int y = maxHeight - barHeight + 50; // Invert y-axis for drawing
+
+                // Set color based on strategy type
+                if (isNiceStrategy(strategies.get(i))) {
+                    g.setColor(Color.BLUE);
+                } else if (isMeanStrategy(strategies.get(i))) {
+                    g.setColor(Color.RED);
+                } else {
+                    g.setColor(Color.GREEN);
+                }
+
+                g.fillRect(x, y, barWidth - 5, barHeight); // Draw the bar
+                g.setColor(Color.BLACK);
+                g.drawRect(x, y, barWidth - 5, barHeight); // Draw the border
+                g.drawString(strategies.get(i).getClass().getSimpleName(), x, maxHeight + 20); // Label the strategy
+            }
+        }
+    };
+
+    frame.setSize(width, height);
+    frame.setVisible(true);
+    frame.addWindowListener(new WindowAdapter() {
+        public void windowClosing(WindowEvent we) {
+            frame.dispose();
+        }
+    });
+}
+
+private static boolean isNiceStrategy(Strategy strategy) {
+    return strategy instanceof AlwaysFriendly ||
+           strategy instanceof ForgiveFirst ||
+           strategy instanceof GoldenRule ||
+           strategy instanceof GracefulTitForTat ||
+           strategy instanceof KindPavlov ||
+           strategy instanceof PersistentHope ||
+           strategy instanceof GentleMirror ||
+           strategy instanceof SympatheticPartner ||
+           strategy instanceof FaithfulFriend ||
+           strategy instanceof AdaptiveForgiveness ||
+           strategy instanceof FriendlyRandomizer ||
+           strategy instanceof CautiousOptimist ||
+           strategy instanceof ForgivingMajority ||
+           strategy instanceof OptimisticPartner ||
+           strategy instanceof SoftPavlov ||
+           strategy instanceof TrustButVerify ||
+           strategy instanceof GenerousMirror ||
+           strategy instanceof HopefulAlly ||
+           strategy instanceof BalancedForgiveness ||
+           strategy instanceof Idealist ||
+           strategy instanceof ForgivingPavlov ||
+           strategy instanceof FriendlyLeader ||
+           strategy instanceof SteadyCompanion ||
+           strategy instanceof GoldenMirror ||
+           strategy instanceof Peacekeeper;
+}
+
+private static boolean isMeanStrategy(Strategy strategy) {
+    return strategy instanceof AlwaysDefector ||
+           strategy instanceof ExploitativeMirror ||
+           strategy instanceof HardPavlov ||
+           strategy instanceof TitForTwoDefections ||
+           strategy instanceof AggressiveLeader ||
+           strategy instanceof UnforgivingTrigger ||
+           strategy instanceof DeceptiveAlly ||
+           strategy instanceof Opportunist ||
+           strategy instanceof Punisher ||
+           strategy instanceof CalculatedGreed ||
+           strategy instanceof Backstabber ||
+           strategy instanceof CruelPavlov ||
+           strategy instanceof TrapSetter ||
+           strategy instanceof MercilessMirror ||
+           strategy instanceof ConditionalAggressor ||
+           strategy instanceof DeceptiveFriend ||
+           strategy instanceof ColdBetrayer ||
+           strategy instanceof UnforgivingPartner ||
+           strategy instanceof HostileMajority ||
+           strategy instanceof RelentlessTrigger;
+}
+}
