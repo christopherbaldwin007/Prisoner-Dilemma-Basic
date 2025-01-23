@@ -628,6 +628,7 @@ public class PrisonersDilemma {
             frame.dispose();
         }
     });
+// In need of importing and updating (to ln 632-684)
 }
 
 private static boolean isNiceStrategy(Strategy strategy) {
@@ -680,4 +681,5 @@ private static boolean isMeanStrategy(Strategy strategy) {
            strategy instanceof HostileMajority ||
            strategy instanceof RelentlessTrigger;
 }
+    // In need of importing and updating  (to ln 632-684)
 }
